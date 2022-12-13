@@ -1,0 +1,4 @@
+rt,responses,question_order,task,trial_type,trial_index,time_elapsed,internal_node_id,participant,turkCode,condition,prize
+6947,"{""colourBlindness"":""8""}",[0],demographics,survey-multi-choice,3,42345,0.0-3.0,93480,721391,lowRank,NA
+16249,"{""Q0"":""25"",""Q1"":""Male"",""Q2"":""Vietnamese, English"",""Q3"":""United States""}",NA,demographics,survey-text,4,58600,0.0-4.0,93480,721391,lowRank,NA
+14077,removed for privacy,NA,demographics,survey-text,232,1232358,0.0-25.0,93480,721391,lowRank,1

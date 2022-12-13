@@ -1,0 +1,4 @@
+"rt","responses","task","option","trial_type","trial_index","time_elapsed","internal_node_id","participant","turkCode","condition"
+"32910","{""20 points:"":""1"",""0 points:"":""99"",""Other:"":""0""}","percentage","low_risky","survey-text","203","1080783","0.0-19.0","33885","276352","highRank"
+"28101","{""100 points:"":""0"",""80 points:"":""0"",""Other:"":""100""}","percentage","high_risky","survey-text","204","1108904","0.0-20.0","33885","276352","highRank"
+"20954","{""70 points:"":""50"",""30 points:"":""50"",""Other:"":""0""}","percentage","decision_risky","survey-text","205","1129880","0.0-21.0","33885","276352","highRank"

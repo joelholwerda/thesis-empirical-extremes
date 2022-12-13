@@ -1,0 +1,5 @@
+"banditTrial","block","trialInBlock","singleOption","leftOption","rightOption","choice","feedback","rt","task","choiceType","trial_type","trial_index","time_elapsed","internal_node_id","participant","turkCode","condition"
+"1","1","1","false","safe","risky","risky","20","692","bandit","low_value","bandit-task","8","56879","0.0-7.0-0.0","879","992457","lowRank"
+"2","1","2","false","risky","safe","risky","80","386","bandit","high_value","bandit-task","9","59685","0.0-7.0-0.1","879","992457","lowRank"
+"3","1","3","false","safe","risky","safe","50","372","bandit","decision","bandit-task","10","63124","0.0-7.0-0.2","879","992457","lowRank"
+"4","1","4","false","risky","safe","risky","30","471","bandit","decision","bandit-task","11","65961","0.0-7.0-0.3","879","992457","lowRank"

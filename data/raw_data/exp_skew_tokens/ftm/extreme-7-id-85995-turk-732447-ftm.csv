@@ -1,0 +1,7 @@
+"rt","responses","task","option","trial_type","trial_index","time_elapsed","internal_node_id","participant","turkCode","condition"
+"13486","{""Q0"":""20""}","ftm","decision_safe","survey-text","193","1474080","0.0-17.0-0.0","85995","732447","highRank"
+"3484","{""Q0"":""10""}","ftm","low_risky","survey-text","194","1477577","0.0-17.0-0.1","85995","732447","highRank"
+"2662","{""Q0"":""30""}","ftm","decision_risky","survey-text","195","1480250","0.0-17.0-0.2","85995","732447","highRank"
+"2490","{""Q0"":""20""}","ftm","high_risky","survey-text","196","1482752","0.0-17.0-0.3","85995","732447","highRank"
+"2518","{""Q0"":""10""}","ftm","high_safe","survey-text","197","1485278","0.0-17.0-0.4","85995","732447","highRank"
+"3016","{""Q0"":""40""}","ftm","low_safe","survey-text","198","1488305","0.0-17.0-0.5","85995","732447","highRank"

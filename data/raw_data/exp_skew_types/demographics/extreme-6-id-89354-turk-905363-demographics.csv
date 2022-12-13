@@ -1,0 +1,3 @@
+"rt","responses","question_order","task","trial_type","trial_index","time_elapsed","internal_node_id","participant","turkCode","condition"
+"3275","{""colourBlindness"":""8""}","[0]","demographics","survey-multi-choice","3","12074","0.0-3.0","89354","905363","highRank"
+"8427","{""Q0"":""22"",""Q1"":""Male"",""Q2"":""English."",""Q3"":""USA""}","","demographics","survey-text","4","20507","0.0-4.0","89354","905363","highRank"
