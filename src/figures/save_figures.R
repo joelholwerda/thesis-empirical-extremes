@@ -1,9 +1,9 @@
 save_figures <- function(data, width = 80, height = 80, image_format = "pdf", data_name = NA, parent_folder = NA) {
   
   # Extract name of variable passed in as the data argument for naming folders/files
-  if (is_na(data_name)) {data_name <- rlang::ensym(data) %>% rlang::expr_text()}
+  if (is_na(data_name)) {data_name <- rlang::ensym(data) %>% rlang::expr_text(.)}
   
-  # Use the tidy_data folder as a default save location
+  # Set default save location
   if (is_na(parent_folder)) {parent_folder <- here::here("output", "figures")}
   # If folder name argument is supplied, use it to name the folder that will contain
   # the figures, otherwise use the name of the variable used as the data argument
@@ -23,7 +23,7 @@ save_figures <- function(data, width = 80, height = 80, image_format = "pdf", da
   # If data is a list of data elements to be saved in separate image files, save
   # each element in the save_location folder named based on their element names
   file_names <- file.path(save_location_images, paste0(names(data$figures), ".", image_format))
-  if (is.list(data)) {
+  if (is.list(data) & !is.ggplot(data)) {
     # If a single width or height is given, repeat it for compatibility with inputting arrays
     if (length(width) == 1) {width <- rep(width, length(data$figures))}
     if (length(height) == 1) {height <- rep(height, length(data$figures))}
