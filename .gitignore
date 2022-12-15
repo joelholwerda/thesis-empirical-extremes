@@ -36,3 +36,9 @@ vignettes/*.pdf
 *.knit.md
 
 .DS_Store
+
+*.rds
+
+*.pdf
+
+data/tidy_data/

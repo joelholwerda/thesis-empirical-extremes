@@ -1,10 +1,11 @@
-## Experiments
-# 1. `exp_skew_centre`: Manipulated rank (and average) by including an additional pair above or below shared pair.
-# 2. `exp_variance`: Manipulated distance from the average using variance.
-# 3. `exp_skew_edges`: Manipulated distance from the average by including outcomes close to the best or worst outcome.
-# 4. `exp_skew_tokens`: Manipulated rank (and average) while controlling for types.
-# 5. `exp_skew_types`: Manipulated rank while controlling for average and tokens.
-# 6. `exp_temporal`: Manipulated alternating or random presentation of gains and losses.
+# Experiments ------------------------------------------------------------------
+
+# 1. `exp_skew_centre`: Manipulated rank and distance from the average by including an additional pair above or below the shared pair
+# 2. `exp_variance`: Manipulated distance from the average by manipulating the variance of each option
+# 3. `exp_skew_edges`: Manipulated distance from the average by including outcomes close to the best or worst outcome
+# 4. `exp_skew_tokens`: Manipulated token-based extremity while controlling the number of types
+# 5. `exp_skew_types`: Manipulated type-based extremity while controlling the number of tokens
+# 6. `exp_temporal`: Manipulated alternating or random presentation of gains and losses
 
 # Setup ------------------------------------------------------------------------
 
@@ -26,7 +27,7 @@ here::here("src", "figures", "wrangle_choices_for_figures.R") %>% source()
 here::here("src", "figures", "wrangle_ftm_for_figures.R") %>% source()
 here::here("src", "figures", "wrangle_percent_for_figures.R") %>% source()
 
-# Load data ----
+## Load data ----
 
 data_names <-  c(
   "exp_skew_centre", 
@@ -40,7 +41,7 @@ data_names <-  c(
 
 load_tidy_data(data_names)
 
-# Options ----
+## Options ----
 
 save_figures_to_file <- TRUE
 figure_width <- 80
@@ -174,7 +175,7 @@ create_figures <- function(data) {
     # Add vertical line at indifference
     geom_vline(data = ftm_data %>% filter(facet_cols == "outcome"), aes(xintercept = 0.5), colour = "grey80") +
     # Add bar plots
-    geom_barh(stat = "count", position = position_fill(reverse = TRUE), colour = "black", size = 0.5) +
+    geom_barh(stat = "count", position = position_fill(reverse = TRUE), colour = "black", linewidth = 0.5) +
     scale_x_continuous(
       breaks = c(0, 0.25, 0.5, 0.75, 1),
       labels = c("0", ".25", ".5", ".75", "1")
@@ -254,7 +255,7 @@ exp_skew_tokens$figures <- create_figures(exp_skew_tokens)
 exp_skew_types$figures <- create_figures(exp_skew_types)
 exp_temporal$figures <- create_figures(exp_temporal)
 
-# Save the figures as .rds files for use in the rmarkdown article and as pdfs
+# Save the figures as .rds files and as PDFs
 
 if (save_figures_to_file) {
   

@@ -1,3 +1,11 @@
+# `conditional_hypothesis()` is a helper function that uses the `hypothesis()` function from the brms package to test hypotheses regarding one or more (effect) variables whilst specifying the values of other (conditional) variables
+
+# `brms_object` needs to be a model fitted using brms (brmsfit object)
+# `hypothesis` must be a character string that includes levels of factor effect_variables or names of numeric effect_variables. The two sides of the hypothesis must be separated by > or <. For example, 'x1 > x2'. Interactions can be specified by placing : between valid factor levels or numeric variables. For example, 'x1:y1 > x1:y2'
+# `effect_variables` must be a character string (or vector) that corresponds to population level variables in brms_object.
+# `conditional_variables` must be a character string (or vector) that corresponds to a population level variable in brms_object.
+# `conditional_levels` must be a character string (or vector) that corresponds to one level from (each of) conditional_variables.
+
 conditional_hypothesis <- function(brms_object = NULL, hypothesis = NULL, effect_variables = NULL, conditional_variables = NULL, conditional_levels = NULL, outcome_level = NULL, estimate_type = "median", ci_width = 0.95, ci_type = "hdi") {
   
   # Check that brms_object is a brmsfit object
@@ -42,16 +50,16 @@ conditional_hypothesis <- function(brms_object = NULL, hypothesis = NULL, effect
   effect_contrasts <- calculate_effect_contrasts(hypothesis_sides, effect, effect_variables, brms_object)
   
   # Skip calculating contrasts for the conditional variables if none provided
-  if (!(is.null(conditional_variables) || conditional_variables == "none")) {
-  
+  if (!(is.null(conditional_variables) || any(conditional_variables == "none"))) {
+    
     # Calculate contrasts for each effect
     conditional_contrasts <- calculate_conditional_contrasts(conditional_variables, conditional_levels, relevant_parameters, brms_object)
     
   } else {conditional_contrasts <- NULL}
-
+  
   # Combine effect and conditional contrasts for each parameter
   contrasts <- combine_contrasts(hypothesis_sides, relevant_parameters, conditional_contrasts, effect_contrasts)
-
+  
   # Compose hypothesis phrase from the hypothesis sides and direction 
   hypothesis_phrase <- compose_hypothesis_phrase(hypothesis_sides, hypothesis_direction, relevant_parameters, contrasts)
   
@@ -82,7 +90,7 @@ conditional_hypothesis <- function(brms_object = NULL, hypothesis = NULL, effect
 # Parse hypothesis direction ---------------------------------------------------------------------------------------
 
 parse_hypothesis_direction <- function(hypothesis) {
-
+  
   # Check that hypothesis is provided
   if (!is.character(hypothesis)) {
     stop(
@@ -102,13 +110,13 @@ parse_hypothesis_direction <- function(hypothesis) {
   }
   
   return(hypothesis_direction)
-
+  
 }
 
 # Get population level parameters from brms_object$data -------------------------------------------------------
 
 get_parameters <- function(brms_object, outcome_level) {
-
+  
   parameters <- list()
   
   # Get the name of each population-level effect parameter
@@ -124,14 +132,14 @@ get_parameters <- function(brms_object, outcome_level) {
     
     # Check that outcome_levels is valid
     if (length(outcome_level_parameters) == 0) {
-    
+      
       valid_outcome_levels <- parameters$names_long %>% 
         str_extract("mu[:alpha:]+") %>% 
         str_remove("mu") %>% 
         unique()
       
       stop(paste0("outcome_levels must be a charecter string that corresponds to a level of the outcome variable in a categorical or multinomial family model. The valid outcome_levels are: ", paste0(valid_outcome_levels, collapse = ", ")))
-    
+      
     } else {
       parameters$names_long <- outcome_level_parameters
     }
@@ -142,7 +150,7 @@ get_parameters <- function(brms_object, outcome_level) {
     str_remove("^b_mu[:alpha:]*_|^bsp_mu[:alpha:]*_mo|^b_|^bsp_mo")
   
   return(parameters)
-
+  
 }
 
 # Get names of valid effect and conditional variables ---------------------------------------------------------
@@ -150,7 +158,7 @@ get_parameters <- function(brms_object, outcome_level) {
 get_valid_variables <- function(brms_object, parameters) {
   
   valid_variables <- list()
-
+  
   # Retrieve valid variable names
   variable_in_parameters <- names(brms_object$data) %>% 
     map_lgl(~ str_detect(parameters$names_short, .) %>% any())
@@ -168,13 +176,13 @@ get_valid_variables <- function(brms_object, parameters) {
   valid_variables$conditional_phrase <- valid_variables$all[valid_variables$is_factor] %>% paste0(collapse = ", ")
   
   return(valid_variables)
-
+  
 }
 
 # Check that effect_variable is valid (provide assistance if false) ----------------------------------------------------
 
 check_effect_variables <- function(effect_variables, valid_variables) {
-
+  
   # Check that effect_variables is provided
   if (!is.character(effect_variables)) {
     stop(
@@ -205,7 +213,7 @@ check_effect_variables <- function(effect_variables, valid_variables) {
 # Check that conditional_variable is valid (provide assistance if false) ---------------------------------------------
 
 check_conditional_variables <- function(effect_variables, conditional_variables, valid_variables) {
-    
+  
   # Check that conditional_variables is provided
   if (is.null(conditional_variables)) {
     warning(
@@ -226,8 +234,8 @@ check_conditional_variables <- function(effect_variables, conditional_variables,
   }
   
   # Skip checking conditional variables if none provided
-  if (!(is.null(conditional_variables) || conditional_variables == "none")) {
-  
+  if (!(is.null(conditional_variables) || any(conditional_variables == "none"))) {
+    
     # Check that conditional_variables correspond to at least one parameter
     conditional_is_valid <- map_lgl(conditional_variables, ~ . %in% valid_variables$all[valid_variables$is_factor])
     
@@ -260,13 +268,13 @@ check_conditional_variables <- function(effect_variables, conditional_variables,
     }
   }
 }
-  
+
 # Check that conditional_levels is valid (provide assistance if false) ---------------------------------------------
 
 check_conditional_levels <- function(conditional_variables, conditional_levels, brms_object) {
   
   # Skip checking conditional_levels if no conditional_variables provided
-  if (!(is.null(conditional_variables) || conditional_variables == "none")) {
+  if (!(is.null(conditional_variables) || any(conditional_variables == "none"))) {
     
     # Make phrase with valid levels of conditional_variables
     valid_conditional_levels <- map(
@@ -344,7 +352,7 @@ parse_effect <- function(effect_variables, valid_variables, brms_object) {
   effect$is_ordered <- map_lgl(effect_variables, ~ . %in% valid_variables$all[valid_variables$is_ordered])
   
   if (any(effect$is_factor & !effect$is_ordered)) {
-  
+    
     # Retrieve the level names associated with factor effect_variables 
     effect$levels <- map(effect_variables[effect$is_factor & !effect$is_ordered], ~ levels(brms_object$data[[.]]))
     names(effect$levels) <- effect_variables[effect$is_factor & !effect$is_ordered]
@@ -395,7 +403,7 @@ parse_hypothesis_sides <- function(hypothesis) {
 # Check the hypothesis sides are valid (provide assistance if false) ---------------------------------------------
 
 check_hypothesis_sides <- function(hypothesis_sides, valid_variables, effect_variables, effect) {
-
+  
   # Variables corresponding to c(left, right). Will change to TRUE in for loop if side is 0 or valid factor or numeric variable
   valid_factor <- c(FALSE, FALSE)
   valid_numeric <- c(FALSE, FALSE)
@@ -501,8 +509,8 @@ select_relevant_parameters <- function(parameters, effect_variables, conditional
   n_variables <- effect_parameters %>% str_count(":") + 1
   
   # Skip selecting parameters with conditional variables if none provided
-  if (!(is.null(conditional_variables) || conditional_variables == "none")) {
-  
+  if (!(is.null(conditional_variables) || any(conditional_variables == "none"))) {
+    
     # Does the parameter include the conditional variable?
     includes_conditional <- map(
       conditional_variables, 
@@ -528,7 +536,7 @@ select_relevant_parameters <- function(parameters, effect_variables, conditional
     ) %>% 
       # Does the parameter include the conditional variable?
       bind_cols(includes_conditional)
-  
+    
   } else {
     
     # Are there any additional variables except the effect variables?
@@ -584,7 +592,7 @@ calculate_effect_contrasts <- function(hypothesis_sides, effect, effect_variable
   }
   
   return(effect_contrasts)
-    
+  
 }
 
 # Calculate contrasts for each effect ---------------------------------------------------------------------------------------
@@ -637,7 +645,7 @@ combine_contrasts <- function(hypothesis_sides, relevant_parameters, conditional
     if (!hypothesis_sides$is_zero["left"]) {contrasts$left <- combined_conditional_contrasts * effect_contrasts$left}
     
     if (!hypothesis_sides$is_zero["right"]) {contrasts$right <- combined_conditional_contrasts * effect_contrasts$right}
-  
+    
   } else {
     # Use effect contrasts if no conditional_variables
     contrasts$left <- effect_contrasts$left
@@ -645,7 +653,7 @@ combine_contrasts <- function(hypothesis_sides, relevant_parameters, conditional
   }
   
   return(contrasts)
-    
+  
 }
 
 # Compose hypothesis phrase from the hypothesis sides and direction  ----------------------------------------------
@@ -671,18 +679,18 @@ compose_hypothesis_phrase <- function(hypothesis_sides, hypothesis_direction, re
   hypothesis_phrase <- paste(phrase_left, hypothesis_direction, phrase_right)
   
   return(hypothesis_phrase)
-
+  
 }
 
 # Evaluate hypothesis phrase using brms::hypothesis ---------------------------------------------------------------------------------------
 
 evaluate_hypothesis <- function(hypothesis_phrase, brms_object) {
-
-# run brms::hypothesis
-hypothesis_evaluation <- hypothesis(brms_object, hypothesis_phrase, class = NULL)
-
-return(hypothesis_evaluation)
-
+  
+  # run brms::hypothesis
+  hypothesis_evaluation <- hypothesis(brms_object, hypothesis_phrase, class = NULL)
+  
+  return(hypothesis_evaluation)
+  
 }
 
 # Summarise brms::hypothesis output using bayestestR ---------------------------------------------------------------------------
@@ -726,13 +734,13 @@ summarise_hypothesis_output <- function(hypothesis_evaluation, estimate_type, ci
   )
   
   return(hypothesis_summary)
-
+  
 }
 
 # Print summary rather than summary and samples
 print.conditionalhypothesis <- function(x, digits = 3) {
   
-  if (!(is.null(x$conditional_variables) || x$conditional_variables == "none")) {
+  if (!(is.null(x$conditional_variables) || any(x$conditional_variables == "none"))) {
     
     # List the conditional variables and their levels
     conditional_phrase <- paste0(

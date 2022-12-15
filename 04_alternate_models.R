@@ -1,10 +1,11 @@
-## Experiments
-# 1. `exp_skew_centre`: Manipulated rank (and average) by including an additional pair above or below shared pair.
-# 2. `exp_variance`: Manipulated distance from the average using variance.
-# 3. `exp_skew_edges`: Manipulated distance from the average by including outcomes close to the best or worst outcome.
-# 4. `exp_skew_tokens`: Manipulated rank (and average) while controlling for types.
-# 5. `exp_skew_types`: Manipulated rank while controlling for average and tokens.
-# 6. `exp_temporal`: Manipulated alternating or random presentation of gains and losses.
+# Experiments ------------------------------------------------------------------
+
+# 1. `exp_skew_centre`: Manipulated rank and distance from the average by including an additional pair above or below the shared pair
+# 2. `exp_variance`: Manipulated distance from the average by manipulating the variance of each option
+# 3. `exp_skew_edges`: Manipulated distance from the average by including outcomes close to the best or worst outcome
+# 4. `exp_skew_tokens`: Manipulated token-based extremity while controlling the number of types
+# 5. `exp_skew_types`: Manipulated type-based extremity while controlling the number of tokens
+# 6. `exp_temporal`: Manipulated alternating or random presentation of gains and losses
 
 # Setup ------------------------------------------------------------------------
 
